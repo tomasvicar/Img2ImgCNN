@@ -1,4 +1,7 @@
-function predict_net(folder,folder_gt,net_path,show_res)
+function predict_net(folder,folder_gt,net_path)
+
+
+show_res=1;
 
 global uniques max_val min_val max_val_lbl min_val_lbl
 
@@ -103,18 +106,27 @@ for i = 1:length(inDs.Files)
             gt = readimage(outDs,i);
             gt=(gt+0.5)*single((max_val_lbl-min_val_lbl))+single(min_val_lbl);
         end
-        img_final_show=cat(2,img_final,gt);
+        img_final_show=cat(2,((img(:,:,1)+0.5)*single((max_val_lbl-min_val_lbl)))+single(min_val_lbl),img_final,gt);
     else
         img_final_show=img_final;
     end
     
     
     if show_res
-        figure();
         imshow(img_final_show,[]);
         drawnow;
     end
-
+    
+    
+    
+    [filepath,name,ext] = fileparts(inDs.Files{i});
+    
+    mkdir([filepath '_res'])
+    
+    imwrite(img_final,[filepath '_res/' name '.' ext])
+    
+    drawnow
+    
 end
 
 

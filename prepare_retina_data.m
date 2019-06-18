@@ -16,8 +16,6 @@ for file_num=1:length(listing)
     
     name=listing{file_num};
     
-    name=['../retina/data/' num2str(file_num,'%03.f') '.tif'];
-    name_gt=['../retina/gt/' num2str(file_num,'%03.f') '.tif'];
 
     
     num_of_frames=round(v.Duration*v.FrameRate);
@@ -26,13 +24,15 @@ for file_num=1:length(listing)
     imgs=zeros([img_size num_of_frames]);
     
     frame=0;
+    pocitacni=0;
     while hasFrame(v)
         frame=frame+1;
         img = readFrame(v);
         img=rgb2gray(single(img)/255);
         imgs(:,:,frame)=img;
-        if frame==5
-            imwrite_single(name,img(50:end-50,50:end-50)); 
+        if mod(frame,10)==0
+            pocitacni=pocitacni+1;
+            imwrite_single(['../retina/data/' num2str(file_num,'%03.f') '_' num2str(frame,'%03.f') '.tif'],img(50:end-50,50:end-50)); 
         end
         
     end
@@ -40,9 +40,12 @@ for file_num=1:length(listing)
     
     mean_img=single(mean(imgs,3));
     
-    kk=5;
-    for frame=5
-        imwrite_single(name_gt,mean_img(50:end-50,50:end-50));
+    kk=10;
+    for frame=1:pocitacni
+        imwrite_single(['../retina/gt/' num2str(file_num,'%03.f') '_' num2str(kk,'%03.f') '.tif'],mean_img(50:end-50,50:end-50));
+
+%         movefile(['../retina/gt/' num2str(file_num,'%03.f') '_' num2str(frame,'%03.f') '.tif'],['../retina/gt/' num2str(file_num,'%03.f') '_' num2str(kk,'%03.f') '.tif'])
+        kk=kk+10;
     end
     
     

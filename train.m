@@ -1,8 +1,11 @@
-clc;clear all;close all force;
+function train(folder_train,folder_valid,miniBatchSize,patchSize,augment,epoch,drop_period,drop_faktor,init_lr)
+
+
+% clc;clear all;close all force;
 
 % folder_train='D:\Img2ImgCNN\bunky_denoise/train';
 % folder_valid='D:\Img2ImgCNN\bunky_denoise/valid';
-% 
+
 % folder_train='D:\Img2ImgCNN\bunky_seg/train';
 % folder_valid='D:\Img2ImgCNN\bunky_seg/valid';
 
@@ -13,23 +16,30 @@ clc;clear all;close all force;
 % folder_train='D:\Img2ImgCNN\retina_denoise/train';
 % folder_valid='D:\Img2ImgCNN\retina_denoise/valid';
 
-folder_train='D:\Img2ImgCNN\retina_segment/train';
-folder_valid='D:\Img2ImgCNN\retina_segment/valid';
+% folder_train='D:\Img2ImgCNN\retina_segment/train';
+% folder_valid='D:\Img2ImgCNN\retina_segment/valid';
 
 
 % folder_valid='';
 
+
+
+% miniBatchSize=32;
+% patchSize=[128 128];
+% augment=[1,1,1];
+% % epoch=160;
+% % drop_period=50;
+% % epoch=100;
+% % drop_period=30;
+% epoch=24;
+% drop_period=7;
+% drop_faktor=0.3;
+% init_lr=0.001;
+
+
+
+
 ext={'.tif','.png','.jpg'};
-miniBatchSize=32;
-patchSize=[128 128];
-augment=[1,1,1];
-epoch=43;
-drop_period=10;
-drop_faktor=0.3;
-init_lr=0.001;
-
-
-
 
 
 inDs = imageDatastore([folder_train '/data'],'FileExtensions',ext);
@@ -139,7 +149,8 @@ options = trainingOptions('adam', ...
     'ValidationData',patchds_val,...
     'ValidationFrequency',valid_freq,...
     'MaxEpochs', epoch, ...
-    'Plots','training-progress');
+    'Plots','none',...
+    'OutputFcn',@custom_output); 
 
 
 
@@ -157,7 +168,8 @@ options = trainingOptions('adam', ...
     'VerboseFrequency', 1, ...
     'MiniBatchSize', miniBatchSize, ...
     'MaxEpochs', epoch, ...
-    'Plots','training-progress');    
+    'Plots','none',...
+    'OutputFcn',@custom_output);    
     
 end
 
@@ -173,10 +185,25 @@ name_save=[folder_net '/net_' datestr(now,'mmmm-dd-yyyy-HH-MM-SS-FFF') '.mat'];
 save(name_save,'net','max_val','min_val','min_val_lbl','max_val_lbl','classif','uniques','pixelLabelIDs','classNames','patchSize','ext')
 
 
-predict_net([folder_valid '\data'],[folder_valid '\gt'],name_save,1);
+if length(folder_valid)>0
+    predict_net([folder_valid '\data'],[folder_valid '\gt'],name_save);
+end
 
 
 
+end
 
 
+function stop = custom_output(info)
 
+stop = false;
+
+
+persistent loss
+
+
+loss=[loss,info.TrainingLoss];
+figure(1)
+plot(loss)
+
+end
