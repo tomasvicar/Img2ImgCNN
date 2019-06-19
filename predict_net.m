@@ -36,6 +36,9 @@ for i = 1:length(inDs.Files)
     
     
     
+%     poskladany_p=zeros(img_size);
+    
+    
     poskladany=zeros(img_size);
     podelit=zeros(img_size);
     
@@ -71,15 +74,18 @@ for i = 1:length(inDs.Files)
 %                 img_out_tmp=predict(net,imgg);
 %                 [~,img_out_tmp]=max(img_out,[],3);
 %                 img_out=zeros(size(img,1),size(img,2),'single');
-                  [img_out_tmp,scores] = semanticseg(imgg,net);
+                  [img_out_tmp,~,scores] = semanticseg(imgg,net);
                   img_out=zeros(size(img_out_tmp,1),size(img_out_tmp,2),'single');
                   for kq=1:length(classNames)               
                       img_out(img_out_tmp==classNames(kq))=pixelLabelIDs(kq);
                   end
+                  
                 
             else
                 img_out=((predict(net,imgg)+0.5)*single((max_val_lbl-min_val_lbl)))+single(min_val_lbl);
             end
+            
+%             poskladany_p(x:xx,y:yy)=poskladany_p(x:xx,y:yy)+scores(:,:,2).*vahokno;
             
             poskladany(x:xx,y:yy)=poskladany(x:xx,y:yy)+img_out.*vahokno;
             podelit(x:xx,y:yy)=podelit(x:xx,y:yy)+vahokno;
@@ -88,7 +94,7 @@ for i = 1:length(inDs.Files)
          end
     end
     
-    
+%     p_final=poskladany_p./podelit;
 
     img_final=poskladany./podelit;
     
@@ -123,8 +129,13 @@ for i = 1:length(inDs.Files)
     
     mkdir([filepath '_res'])
     
+    if max(img_final(:))>100
+       img_final=uint8(img_final);   
+    end
     imwrite(img_final,[filepath '_res/' name '.' ext])
+%     imwrite(p_final,[filepath '_res/p_' name '.' ext])
     
+%     imshow(p_final,[])
     drawnow
     
 end

@@ -1,7 +1,7 @@
-function train(folder_train,folder_valid,miniBatchSize,patchSize,augment,epoch,drop_period,drop_faktor,init_lr)
+% function train(folder_train,folder_valid,miniBatchSize,patchSize,augment,epoch,drop_period,drop_faktor,init_lr)
 
 
-% clc;clear all;close all force;
+clc;clear all;close all force;
 
 % folder_train='D:\Img2ImgCNN\bunky_denoise/train';
 % folder_valid='D:\Img2ImgCNN\bunky_denoise/valid';
@@ -16,25 +16,25 @@ function train(folder_train,folder_valid,miniBatchSize,patchSize,augment,epoch,d
 % folder_train='D:\Img2ImgCNN\retina_denoise/train';
 % folder_valid='D:\Img2ImgCNN\retina_denoise/valid';
 
-% folder_train='D:\Img2ImgCNN\retina_segment/train';
-% folder_valid='D:\Img2ImgCNN\retina_segment/valid';
+folder_train='D:\Img2ImgCNN\retina_segment/train';
+folder_valid='D:\Img2ImgCNN\retina_segment/valid';
 
 
 % folder_valid='';
 
 
 
-% miniBatchSize=32;
-% patchSize=[128 128];
-% augment=[1,1,1];
-% % epoch=160;
-% % drop_period=50;
-% % epoch=100;
-% % drop_period=30;
+miniBatchSize=32;
+patchSize=[128 128];
+augment=[1,1,1];
+epoch=330;
+drop_period=100;
+% epoch=100;
+% drop_period=30;
 % epoch=24;
 % drop_period=7;
-% drop_faktor=0.3;
-% init_lr=0.001;
+drop_faktor=0.3;
+init_lr=0.001;
 
 
 
@@ -149,7 +149,7 @@ options = trainingOptions('adam', ...
     'ValidationData',patchds_val,...
     'ValidationFrequency',valid_freq,...
     'MaxEpochs', epoch, ...
-    'Plots','none',...
+    'Plots','training-progress',...
     'OutputFcn',@custom_output); 
 
 
@@ -168,7 +168,7 @@ options = trainingOptions('adam', ...
     'VerboseFrequency', 1, ...
     'MiniBatchSize', miniBatchSize, ...
     'MaxEpochs', epoch, ...
-    'Plots','none',...
+    'Plots','training-progress',...
     'OutputFcn',@custom_output);    
     
 end
@@ -191,7 +191,7 @@ end
 
 
 
-end
+% end
 
 
 function stop = custom_output(info)
