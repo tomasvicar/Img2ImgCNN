@@ -117,15 +117,19 @@ for i = 1:length(inDs.Files)
         img_final_show=img_final;
     end
     
+        
+    [filepath,name,ext] = fileparts(inDs.Files{i});
+    
+     mkdir([filepath '_res_triple'])
     
     if show_res
         imshow(img_final_show,[]);
         drawnow;
+        print([filepath '_res_triple/' name],'-dpng')
     end
     
     
-    
-    [filepath,name,ext] = fileparts(inDs.Files{i});
+
     
     mkdir([filepath '_res'])
     

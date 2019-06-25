@@ -13,11 +13,11 @@ clc;clear all;close all force;
 % folder_valid='D:\Img2ImgCNN\bunky_jadra/valid';
 
 
-% folder_train='D:\Img2ImgCNN\retina_denoise/train';
-% folder_valid='D:\Img2ImgCNN\retina_denoise/valid';
+folder_train='D:\Img2ImgCNN\retina_denoise/train';
+folder_valid='D:\Img2ImgCNN\retina_denoise/valid';
 
-folder_train='D:\Img2ImgCNN\retina_segment/train';
-folder_valid='D:\Img2ImgCNN\retina_segment/valid';
+% folder_train='D:\Img2ImgCNN\retina_segment/train';
+% folder_valid='D:\Img2ImgCNN\retina_segment/valid';
 
 
 % folder_valid='';
@@ -27,8 +27,8 @@ folder_valid='D:\Img2ImgCNN\retina_segment/valid';
 miniBatchSize=32;
 patchSize=[128 128];
 augment=[1,1,1];
-epoch=330;
-drop_period=100;
+epoch=33;
+drop_period=10;
 % epoch=100;
 % drop_period=30;
 % epoch=24;
